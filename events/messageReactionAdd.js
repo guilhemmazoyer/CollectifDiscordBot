@@ -35,9 +35,8 @@ export async function execute(reaction, user) {
     }
 
     // Cas 2 : Validation d’un créateur par un admin
-    // Le message est dans le billboard des demandes d'affiliation et l'utilisateur qui réagit est un admin
-    if (reaction.message.channel.parentId === BILLBOARD_AFFILIATION_ID &&
-        member.roles.cache.has(ROLE_ADMIN_ID)) {
+    // Le message est dans le billboard des demandes d'affiliation
+    if (reaction.message.channel.parentId === BILLBOARD_AFFILIATION_ID) {
       return await handleCreatorValidation(guild, reaction, user);
     }
 
@@ -59,7 +58,7 @@ async function handleCharteReaction(guild, user) {
     console.log(`Rôle membre ajouté à ${user.tag}`);
 
     await user.send(`👋 Bonjour ${user.username} !  
-Tu viens d’obtenir le rôle **Membre** sur le serveur **${guild.name}**.  
+Tu viens d'obtenir le rôle **Membre** sur le serveur **${guild.name}**.  
 Bienvenue et amuse-toi bien ! 🎉`);
     console.log(`✉️ Message privé pour la charte envoyé à ${user.tag}`);
 
@@ -74,6 +73,8 @@ async function handleCreatorValidation(guild, reaction, user) {
   try {
     const member = await guild.members.fetch(user.id);
 
+    if(!member.roles.cache.has(ROLE_ADMIN_ID)) return; // Doit être un admin
+    
     const thread = reaction.message.channel;
     const starterMessage = await thread.fetchStarterMessage();
     if (!starterMessage || starterMessage.id !== reaction.message.id) return;
