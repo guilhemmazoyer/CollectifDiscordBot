@@ -1,4 +1,6 @@
 import { Client, GatewayIntentBits, Partials, Collection, Events } from "discord.js";
+import http from "http";
+import fetch from "node-fetch";
 import dotenv from "dotenv";
 import fs from "fs";
 dotenv.config();
@@ -65,6 +67,27 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 
+// --- Ping pour éviter l'inactivité du bot --- //
+const PORT = process.env.PORT;
+const SELF_URL = process.env.RENDER_EXTERNAL_URL; // fourni automatiquement par Render
+
+// Petit serveur HTTP
+http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("✅ Bot online\n");
+}).listen(PORT, () => console.log(`🌐 Keep-alive server on port ${PORT}`));
+
+// Ping auto toutes les 10 minutes
+if (SELF_URL) {
+  setInterval(() => {
+    fetch(SELF_URL)
+      .then(() => console.log("🔁 Keep-alive ping sent"))
+      .catch(err => console.error("⚠️ Keep-alive error:", err));
+  }, 10 * 60 * 1000);
+}
+
+
+// --- Message Bot lancé --- //
 client.once("clientReady", () => {
   console.log(`✅ Connecté en tant que ${client.user.tag}`);
   startAbandonedProjectCheck(client);
