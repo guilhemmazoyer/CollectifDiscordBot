@@ -1,4 +1,0 @@
-Le fichier deploy-commands.js est utilisé pour mettre à jour les commandes du bot vers le serveur de discord.
-A déclencher seul via la commande : node deploy-commands.js
-
-Une fois éxecutée il faut relancer le bot pour que ça prenne effet pour les utilisateurs. 
