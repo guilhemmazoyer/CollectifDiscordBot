@@ -157,7 +157,7 @@ async function handleCollabValidation(guild, reaction, user) {
     const link = `https://discord.com/channels/${guild.id}/${thread.id}`;
     const modChannel = guild.channels.cache.get(CHANNEL_ADMIN_ID);
     const recapMessage =
-      `✅ **Ticket validé :** ${thread.name}\n👤 **Créateur :** ${threadAuthor}\n👤 **Personnes impliquées :** ${validUsers[0]} & ${validUsers[1]}\n💬 **Récap :**\n${content}\n🔗 ${link}`;
+      `✅ **Ticket validé :** ${thread.name}\n👤 **Créateur :** ${threadAuthor}\n👤 **Personnes impliquées :** ${users[0]} & ${users[1]}\n💬 **Récap :**\n${content}\n🔗 ${link}`;
 
     if (modChannel) await modChannel.send(recapMessage);
 
@@ -167,7 +167,7 @@ async function handleCollabValidation(guild, reaction, user) {
     if (!partner) return;
 
     const dmText =
-      `✅ Le ticket **${thread.name}** a été accepté  !\n👤 **Personnes impliquées :** ${validUsers[0]} & ${validUsers[1]}\n\n${content}\n\n🔗 ${link}`;
+      `✅ Le ticket **${thread.name}** a été accepté  !\n👤 **Personnes impliquées :** ${users[0]} & ${users[1]}\n\n${content}\n\n🔗 ${link}`;
 
     try {
       await threadAuthor.send(dmText);
