@@ -147,8 +147,9 @@ async function handleCollabValidation(guild, reaction, user) {
 
     if (!hasCreator || !enoughReactions) return;
 
-    const reactor1 = users[0].tag;
-    const reactor2 = users[1].tag;
+    const reactors = [...validUsers.values()]; // transforme la collection en tableau
+    const reactor1 = reactors[0];
+    const reactor2 = reactors[1];
 
     // Validation OK
     await thread.setLocked(true, "Ticket validé (double approbation)");
