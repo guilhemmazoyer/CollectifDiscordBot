@@ -14,6 +14,8 @@ export default {
   },
   messages: {
     chart: "1425368514918879272",
+    pronom: "1429832429425918164",
+    skill: "1429832646078365807",
   },
   emojis: {
     validate: "✅",

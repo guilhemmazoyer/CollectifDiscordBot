@@ -17,6 +17,12 @@ const CATEGORY_CREATOR_ID = config.categories.creatorProjects;
 const BILLBOARD_TICKET_ID = config.channels.billboardTicket;
 const CHANNEL_ADMIN_ID = config.channels.administration;
 
+// Choix du pronom
+const MESSAGE_PRONOM_ID = config.messages.pronom;
+
+// Choix des compétences
+const MESSAGE_SKILL_ID = config.messages.skill;
+
 
 // 🎯 Fonction principale
 export const name = "messageReactionAdd";
@@ -45,10 +51,22 @@ export async function execute(reaction, user) {
       return await handleCollabValidation(guild, reaction, user);
     }
 
+    // Cas 4 : Choix de pronom
+    if (reaction.message.id === MESSAGE_PRONOM_ID) {
+      return await handlePronomReaction(guild, user);
+    }
+
+    // Cas 5 : Choix des compétences
+    if (reaction.message.id === MESSAGE_SKILL_ID) {
+      return await handleSkillReaction(guild, user);
+    }
+
   } catch (error) {
     console.error("❌ Erreur dans le gestionnaire principal messageReactionAdd :", error);
   }
 }
+
+
 
 // FONCTION 1 - Validation de la charte
 async function handleCharteReaction(guild, user) {
@@ -68,7 +86,7 @@ Bienvenue et amuse-toi bien ! 🎉`);
 }
 
 
-// FONCTION 2 — Validation créateur par admin
+// FONCTION 2 - Validation créateur par admin
 async function handleCreatorValidation(guild, reaction, user) {
   try {
     const member = await guild.members.fetch(user.id);
@@ -117,7 +135,7 @@ async function handleCreatorValidation(guild, reaction, user) {
 }
 
 
-// FONCTION 3 — Manage des tickets - Validation d'aide
+// FONCTION 3 - Manage des tickets - Validation d'aide
 async function handleCollabValidation(guild, reaction, user) {
   try {
     const thread = reaction.message.channel;
@@ -184,5 +202,25 @@ async function handleCollabValidation(guild, reaction, user) {
     console.log(`🤝 Ticket "${thread.name}" validé par ${threadAuthor.tag} et ${partner.tag}`);
   } catch (error) {
     console.error("❌ Erreur dans handleCollabValidation :", error);
+  }
+}
+
+
+// FONCTION 4 - Ajout des roles pour les pronoms
+async function handlePronomValidation(guild, reaction, user) {
+  try {
+
+  } catch (error) {
+    console.error("❌ Erreur dans handlePronomValidation :", error);
+  }
+}
+
+
+// FONCTION 5 - Ajout des roles pour les compétences
+async function handleSkillValidation(guild, reaction, user) {
+  try {
+
+  } catch (error) {
+    console.error("❌ Erreur dans handleSkillValidation :", error);
   }
 }
