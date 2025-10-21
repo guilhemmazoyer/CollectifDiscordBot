@@ -1,7 +1,4 @@
-import config from "../config.js";
-
-// Constantes globales
-const EMOJI = config.emojis.validate;
+import config, { pronounRoles, skillRoles } from "../config.js";
 
 // Validation de la charte
 const ROLE_MEMBER_ID = config.roles.member;
@@ -30,14 +27,14 @@ export const name = "messageReactionAdd";
 export async function execute(reaction, user) {
   try {
     if (reaction.partial) await reaction.fetch();
-    if (user.bot || reaction.emoji.name !== EMOJI) return;
+    if (user.bot) return;
 
     const guild = reaction.message.guild;
     if (!guild) return;
 
     // Cas 1 : Validation de la charte
     if (reaction.message.id === MESSAGE_CHART_ID) {
-      return await handleCharteReaction(guild, user);
+      return await handleCharteReaction(guild, reaction, user);
     }
 
     // Cas 2 : Validation d’un créateur par un admin
@@ -53,12 +50,12 @@ export async function execute(reaction, user) {
 
     // Cas 4 : Choix de pronom
     if (reaction.message.id === MESSAGE_PRONOM_ID) {
-      return await handlePronomReaction(guild, user);
+      return await handlePronomReaction(guild, reaction, user);
     }
 
     // Cas 5 : Choix des compétences
     if (reaction.message.id === MESSAGE_SKILL_ID) {
-      return await handleSkillReaction(guild, user);
+      return await handleSkillReaction(guild, reaction, user);
     }
 
   } catch (error) {
@@ -69,8 +66,11 @@ export async function execute(reaction, user) {
 
 
 // FONCTION 1 - Validation de la charte
-async function handleCharteReaction(guild, user) {
+async function handleCharteReaction(guild, reaction, user) {
   try {
+    // Si le mauvais emoji est utilisé ça ne fait rien
+    if(!reaction.emoji.name === config.emojis.validate) return;
+    
     const member = await guild.members.fetch(user.id);
     await member.roles.add(ROLE_MEMBER_ID);
     console.log(`Rôle membre ajouté à ${user.tag}`);
@@ -207,8 +207,16 @@ async function handleCollabValidation(guild, reaction, user) {
 
 
 // FONCTION 4 - Ajout des roles pour les pronoms
-async function handlePronomValidation(guild, reaction, user) {
+async function handlePronomReaction(guild, reaction, user) {
   try {
+    const member = await guild.members.fetch(user.id);
+    const emoji = reaction.emoji.name;
+
+    const roleId = pronounRoles[reaction.emoji.name];
+    if (!roleId) return;
+
+    await member.roles.add(roleId);
+    console.log(`🏷️ Rôle de pronom ajouté (${emoji}) à ${user.tag}`);
 
   } catch (error) {
     console.error("❌ Erreur dans handlePronomValidation :", error);
@@ -217,8 +225,16 @@ async function handlePronomValidation(guild, reaction, user) {
 
 
 // FONCTION 5 - Ajout des roles pour les compétences
-async function handleSkillValidation(guild, reaction, user) {
+async function handleSkillReaction(guild, reaction, user) {
   try {
+    const member = await guild.members.fetch(user.id);
+    const emoji = reaction.emoji.name;
+
+    const roleId = skillRoles[reaction.emoji.name];
+    if (!roleId) return;
+
+    await member.roles.add(roleId);
+    console.log(`🏷️ Rôle de compétence ajouté (${emoji}) à ${user.tag}`);
 
   } catch (error) {
     console.error("❌ Erreur dans handleSkillValidation :", error);
